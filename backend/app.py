@@ -135,15 +135,12 @@ def add_date(couple_id):
     if not data or not data.get('title'):
         return jsonify({"error": "Title is required"}), 400
 
-    idea = data.get('dateidea_id')
+    dateidea_id = data.get('dateidea_id')
 
-    idea = DateIdea.query.filter_by(id=dateidea_id, couple_id=couple_id).first()
-    
-    if idea is None:
-        return jsonify({"error": "Date idea not found"}), 404
-    if idea.couple_id != couple_id:
-        return jsonify({"error": "Date idea does not belong to this couple"}), 403
-
+    if dateidea_id:
+        idea = DateIdea.query.filter_by(id=dateidea_id, couple_id=couple_id).first()
+        if not idea:
+            return jsonify({"error": "Date idea not found for this couple"}), 404
     
     new_date = Date(
         couple_id=couple_id,
@@ -224,9 +221,12 @@ def add_memory(couple_id, date_id):
     if not couple:
         return jsonify({"error": "Couple not found"}), 404
 
-    date = Date.query.filter_by(id=date_id, couple_id=couple_id).first()
+    memory = Date.query.filter_by(id=date_id, couple_id=couple_id).first()
 
-    if not date:
+    if memory:
+        return jsonify("error":"Memory already exists for this date."), 400
+    
+    if not memory:
         return jsonify({"error": "Date not found"}), 404
 
     if not data or not data.get('title'):
