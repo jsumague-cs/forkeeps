@@ -70,6 +70,13 @@ def create_couple():
 # Get all Date Ideas for a couple
 @app.route('/api/couples/<int:couple_id>/ideas', methods=['GET'])
 def get_date_ideas(couple_id):
+
+    couple = Couple.query.get(couple_id)
+    
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
+
+    
     ideas = DateIdea.query.filter_by(couple_id=couple_id).all()
     results = [
         {
@@ -78,7 +85,10 @@ def get_date_ideas(couple_id):
             "description": idea.description,
             "category": idea.category,
             "estimated_budget": float(idea.estimated_budget) if idea.estimated_budget else 0.0,
-            "status": idea.status
+            "status": idea.status,
+            "scheduled_date": idea.scheduled_date.isoformat() if idea.scheduled_date else None,
+            "created_at": idea.created_at.isoformat() if idea.created_at else None
+
         }
         for idea in ideas
     ]
@@ -103,13 +113,129 @@ def add_date_idea(couple_id):
         description=data.get('description', ''),
         category=data.get('category', 'General'),
         estimated_budget=data.get('estimated_budget', 0.0),
-        status=data.get('status', 'idea')
+        status=data.get('status', 'idea'),
+        scheduled_date=data.get('scheduled_date', None)
     )
     
     db.session.add(new_idea)
     db.session.commit()
     
     return jsonify({"message": "Date idea created successfully!", "id": new_idea.id}), 201
+
+# Add a Date endpoint
+@app.route('/api/couples/<int:couple_id>/dates', methods=['POST'])
+def add_date(couple_id):
+    data = request.get_json()
+
+    couple = Couple.query.get(couple_id)
+
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
+    
+    if not data or not data.get('title'):
+        return jsonify({"error": "Title is required"}), 400
+
+    new_date = Date(
+        couple_id=couple_id,
+        title=data['title'],
+        description=data.get('description', ''),
+        category=data.get('category', 'General'),
+        budget=data.get('budget', 0.0),
+        status=data.get('status', 'planned'),
+        scheduled_at=data.get('scheduled_at', None),
+        location=data.get('location', '')
+    )
+    
+    db.session.add(new_date)
+    db.session.commit()
+    
+    return jsonify({"message": "Date created successfully!", "id": new_date.id}), 201
+@app.route('/api/couples/<int:couple_id>/dates', methods=['GET'])
+def get_dates(couple_id):
+    couple = Couple.query.get(couple_id)
+
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
+
+    dates = Date.query.filter_by(couple_id=couple_id).all()
+    results = [
+        {
+            "id": date.id,
+            "title": date.title,
+            "description": date.description,
+            "category": date.category,
+            "budget": float(date.budget) if date.budget else 0.0,
+            "status": date.status,
+            "scheduled_at": date.scheduled_at.isoformat() if date.scheduled_at else None,
+            "location": date.location,
+            "created_at": date.created_at.isoformat() if date.created_at else None
+
+        }
+        for date in dates
+    ]
+    return jsonify(results), 200
+
+@app.route('/api/couples/<int:couple_id>/dates/<int:date_id>/memory', methods=['GET'])
+def get_memory(couple_id, date_id):
+
+    couple = Couple.query.get(couple_id)
+
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
+
+    date = Date.query.filter_by(id=date_id, couple_id=couple_id).first()
+
+    if not date:
+        return jsonify({"error": "Date not found"}), 404
+
+    memory = Memory.query.filter_by(date_id=date.id).first()
+
+    if not memory:
+        return jsonify({"error": "Memory not found for this date"}), 404
+
+    result = {
+        "id": memory.id,
+        "date_id": memory.date_id,
+        'title': memory.title,
+        'journal_entry': memory.journal_entry,
+        'actual_expense': memory.actual_expense,
+        'location': memory.location,
+        'rating': memory.rating,
+        "created_at": memory.created_at.isoformat() if memory.created_at else None
+    }
+    return jsonify(result), 200
+
+@app.route('/api/couples/<int:couple_id>/dates/<int:date_id>/memory', methods=['POST'])
+def add_memory(couple_id, date_id):
+    data = request.get_json()
+
+    couple = Couple.query.get(couple_id)
+
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
+
+    date = Date.query.filter_by(id=date_id, couple_id=couple_id).first()
+
+    if not date:
+        return jsonify({"error": "Date not found"}), 404
+
+    if not data or not data.get('title'):
+        return jsonify({"error": "Title is required"}), 400
+
+    new_memory = Memory(
+        date_id=date.id,
+        title=data['title'],
+        journal_entry=data.get('journal_entry', ''),
+        actual_expense=data.get('actual_expense', 0.0),
+        location=data.get('location', ''),
+        rating=data.get('rating', None)
+    )
+    
+    db.session.add(new_memory)
+    db.session.commit()
+    
+    return jsonify({"message": "Memory created successfully!", "id": new_memory.id}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
