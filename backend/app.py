@@ -24,10 +24,39 @@ def health_check():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# Create a demo shared couple space
+# Create users then create a couple space for them
+@app.route('/api/users1', methods=['POST'])
+def create_user1():
+    create_user1 = request.get_json() or {}
+    username = create_user1.get('username')
+
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
+    new_user1 = User(username=username)
+    db.session.add(new_user1)
+    db.session.commit()
+
+    return jsonify({f"message": "Logged in as {new_user1}", "user1_id": new_user1.id}), 201 
+
+@app.route('/api/users2', methods=['POST'])
+def create_user2():
+    create_user2 = request.get_json() or {}
+    username2 = create_user2.get('username2')
+
+    if not username2:
+        return jsonify({"error": "Username is required"}), 400
+
+    new_user2 = User(username=username2)
+    db.session.add(new_user2)
+    db.session.commit()
+
+    return jsonify({f"message": "Logged in as {new_user2}", "user2_id": new_user2.id}), 201 
+
 @app.route('/api/couples', methods=['POST'])
 def create_couple():
-    data = request.get_json() or {}
+    data = request.get_json() or {"user1_id": 1,
+  "user2_id": 2}
     
     # Requires two user IDs
     user1_id = data.get('user1_id')
