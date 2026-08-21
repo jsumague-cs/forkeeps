@@ -25,38 +25,24 @@ def health_check():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # Create users then create a couple space for them
-@app.route('/api/users1', methods=['POST'])
-def create_user1():
-    create_user1 = request.get_json() or {}
-    username = create_user1.get('username')
+@app.route('/api/users', methods=['POST'])
+def create_user():
+    create_user = request.get_json() or {}
+    username = create_user.get('username')
 
     if not username:
         return jsonify({"error": "Username is required"}), 400
 
-    new_user1 = User(username=username)
-    db.session.add(new_user1)
+    new_user = User(username=username)
+    db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({f"message": "Logged in as {new_user1}", "user1_id": new_user1.id}), 201 
+    return jsonify({"message": "Account created successfully!", "user_id": new_user.id, "username": new_user.username}), 201 
 
-@app.route('/api/users2', methods=['POST'])
-def create_user2():
-    create_user2 = request.get_json() or {}
-    username2 = create_user2.get('username2')
-
-    if not username2:
-        return jsonify({"error": "Username is required"}), 400
-
-    new_user2 = User(username=username2)
-    db.session.add(new_user2)
-    db.session.commit()
-
-    return jsonify({f"message": "Logged in as {new_user2}", "user2_id": new_user2.id}), 201 
 
 @app.route('/api/couples', methods=['POST'])
 def create_couple():
-    data = request.get_json() or {"user1_id": 1,
-  "user2_id": 2}
+    data = request.get_json() or {}
     
     # Requires two user IDs
     user1_id = data.get('user1_id')
@@ -64,7 +50,17 @@ def create_couple():
 
     if not user1_id or not user2_id:
         return jsonify({"error": "user1_id and user2_id are required"}), 400
+    
+    if user1_id == user2_id:
+        return jsonify({"error": "invalid request"}), 400
+    
+    
+    user1 = User.query.get(user1_id)
+    user2 = User.query.get(user2_id)
 
+    if not user1 or not user2:
+        return jsonify({"error": "user does not exist"}), 404
+    
     new_couple = Couple(user1_id=user1_id, user2_id=user2_id)
     db.session.add(new_couple)
     db.session.commit()
@@ -92,6 +88,11 @@ def get_date_ideas(couple_id):
 @app.route('/api/couples/<int:couple_id>/ideas', methods=['POST'])
 def add_date_idea(couple_id):
     data = request.get_json()
+
+    couple = Couple.query.get(couple_id)
+
+    if not couple:
+        return jsonify({"error": "Couple not found"}), 404
     
     if not data or not data.get('title'):
         return jsonify({"error": "Title is required"}), 400
