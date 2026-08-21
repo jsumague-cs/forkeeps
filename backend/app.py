@@ -1,4 +1,3 @@
-# backend/app.py
 from flask import Flask, request, jsonify
 from config import Config
 from models import db, Couple, DateIdea, Memory
@@ -9,7 +8,7 @@ app.config.from_object(Config)
 # Initialize SQLAlchemy with Flask
 db.init_app(app)
 
-# Create database tables automatically upon startup
+# Create database tables 
 with app.app_context():
     db.create_all()
 
