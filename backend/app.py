@@ -1,16 +1,13 @@
 from flask import Flask, request, jsonify
 from config import Config
-from models import db, Couple, DateIdea, Memory
+from models import db, migrate, Couple, DateIdea, Memory
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 # Initialize SQLAlchemy with Flask
 db.init_app(app)
-
-# Create database tables 
-with app.app_context():
-    db.create_all()
+migrate.init_app(app, db)
 
 # --- ROUTES ---
 
