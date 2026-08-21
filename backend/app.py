@@ -224,7 +224,7 @@ def add_memory(couple_id, date_id):
     memory = Date.query.filter_by(id=date_id, couple_id=couple_id).first()
 
     if memory:
-        return jsonify("error":"Memory already exists for this date."), 400
+        return jsonify({"error":"Memory already exists for this date."}), 400
     
     if not memory:
         return jsonify({"error": "Date not found"}), 404
