@@ -1,11 +1,12 @@
+# app.py
 from flask import Flask, request, jsonify
 from config import Config
-from models import db, migrate, Couple, DateIdea, Memory
+from models import db, migrate, User, Couple, DateIdea, Date, Memory
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Initialize SQLAlchemy with Flask
+# Initialize extensions with app
 db.init_app(app)
 migrate.init_app(app, db)
 
@@ -15,7 +16,6 @@ migrate.init_app(app, db)
 def home():
     return jsonify({"message": "Forkeeps API is running!"})
 
-# Health Check Route
 @app.route('/health', methods=['GET'])
 def health_check():
     try:
@@ -24,12 +24,22 @@ def health_check():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# Create a demo shared couple space (Helper endpoint)
+# Create a demo shared couple space
 @app.route('/api/couples', methods=['POST'])
 def create_couple():
-    new_couple = Couple()
+    data = request.get_json() or {}
+    
+    # Requires two user IDs
+    user1_id = data.get('user1_id')
+    user2_id = data.get('user2_id')
+
+    if not user1_id or not user2_id:
+        return jsonify({"error": "user1_id and user2_id are required"}), 400
+
+    new_couple = Couple(user1_id=user1_id, user2_id=user2_id)
     db.session.add(new_couple)
     db.session.commit()
+    
     return jsonify({"message": "Couple space created!", "couple_id": new_couple.id}), 201
 
 # Get all Date Ideas for a couple
@@ -63,7 +73,7 @@ def add_date_idea(couple_id):
         description=data.get('description', ''),
         category=data.get('category', 'General'),
         estimated_budget=data.get('estimated_budget', 0.0),
-        status='idea'
+        status=data.get('status', 'idea')
     )
     
     db.session.add(new_idea)
