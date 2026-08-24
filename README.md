@@ -18,6 +18,45 @@ The application aims to reduce the friction of coordinating responsibilities and
 * **Shared Data** — Keep relevant information synchronized between both partners.
 * **Personal Data Isolation** — Individual account data remains separate from shared couple data.
 
+## 🛠️ Tech Stack
+
+### 📱 Frontend
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- Figma — UI/UX Design
+
+### ⚙️ Backend
+- Python
+- Flask — REST API
+- Flask-SQLAlchemy — ORM
+- Flask-Migrate / Alembic — Database Migrations
+
+### 🗄️ Database
+- PostgreSQL
+
+### 📸 Storage
+**Planned**
+- Amazon S3 — Photo and object storage
+
+### 🤖 AI
+**Planned**
+- Vision-capable AI API — Image analysis and organization
+- Embeddings + Vector Search — Semantic memory search
+
+### ☁️ Infrastructure & DevOps
+**Planned**
+- Docker — Containerization
+- GitHub Actions — CI/CD
+- AWS — Cloud infrastructure and deployment
+
+### 🧰 Development Tools
+- VS Code
+- Git
+- GitHub
+- Figma
+- Postman / Insomnia — API testing
 ## Architecture
 
 Forkeeps follows a client-server architecture with a dedicated backend API and frontend application.
