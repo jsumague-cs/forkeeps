@@ -1,156 +1,94 @@
-# Forkeeps ❤️
+# Forkeeps
 
-> **Plans become memories.**
+Forkeeps is a collaborative planning and organization application designed for couples. It provides a shared digital space where partners can manage tasks, plans, finances, and other aspects of their everyday lives while maintaining separate user accounts.
 
-Forkeeps is a mobile app designed for couples to plan, experience, document, and preserve meaningful moments together.
+## Overview
 
-It helps couples turn the things they say *"we should do this someday"* into actual experiences—and eventually into memories worth keeping.
+Forkeeps is built around the concept of a **shared couple space**. Each partner maintains their own account and can be connected to a shared space with their partner. This allows both users to collaborate without requiring a shared login.
 
----
+The application aims to reduce the friction of coordinating responsibilities and plans by bringing commonly shared activities into a single platform.
 
-## 📱 Overview
+## Core Features
 
-Couples often have date ideas scattered across messages, notes, saved posts, and social media.
+* **User Authentication** — Individual accounts with secure authentication.
+* **Couple Spaces** — Two individual accounts can be connected through a shared space.
+* **Shared Tasks** — Create, assign, and track responsibilities together.
+* **Planning** — Organize schedules, activities, and important plans.
+* **Budget Tracking** — Monitor shared expenses and financial activities.
+* **Shared Data** — Keep relevant information synchronized between both partners.
+* **Personal Data Isolation** — Individual account data remains separate from shared couple data.
 
-Forkeeps brings these ideas into one shared space where couples can:
+## Architecture
 
-- 💡 Save and organize date ideas
-- 📅 Plan upcoming dates
-- ❤️ Track completed dates
-- 📔 Turn completed dates into memories
-- 📸 Store photos and journal entries
-- 🔎 Search memories using AI
-- 🧾 Generate shareable Date Receipts
-- 👥 Collaborate through a shared couple space
-
-The core product flow is:
-
-**Idea → Plan → Experience → Memory → Share → Keep**
-
----
-
-## ✨ Core Features
-
-### 💡 Date Ideas
-
-Save things you want to do together.
-
-Each idea can include:
-
-- Title
-- Description
-- Category
-- Estimated budget
-- Notes
-
-Example:
-
-> 🍜 Try a new ramen restaurant
-
----
-
-### 📅 Date Planner
-
-Turn a saved idea into an actual planned date.
-
-Dates can contain:
-
-- Date and time
-- Location
-- Budget
-- Description
-- Status
-
-Possible statuses:
-
-- Planned
-- Completed
-- Cancelled
-
----
-
-### 📔 Memories
-
-Once a date is completed, it can become a memory.
-
-Memories can contain:
-
-- Photos
-- Journal entries
-- Favorite moments
-- Ratings
-- Location
-- Actual expenses
-- Date information
-
-Over time, these memories form a timeline of the couple's experiences.
-
----
-
-### 📸 AI-Powered Photo Organization
-
-Forkeeps will use AI to analyze uploaded photos and generate useful information such as:
-
-- Suggested tags
-- Objects and activities
-- Descriptions
-- Potential categories
-- Other searchable metadata
-
-The goal is to make large collections of memories easier to organize.
-
----
-
-### 🔎 AI Memory Search
-
-Users will eventually be able to search their memories using natural language.
-
-For example:
-
-> "Our beach trips"
-
-> "The time we ate ramen"
-
-> "Photos from our rainy date"
-
-Forkeeps will use semantic search to find relevant memories even when the exact search words don't appear in the original journal entry.
-
----
-
-### 🧾 Date Receipts
-
-Completed dates can be transformed into visually designed share cards.
-
-A Date Receipt can include:
-
-- Date name
-- Date and location
-- Expenses
-- Rating
-- Favorite moment
-- Photos
-- Date information
-
-Users can share their Date Receipts through their device's native sharing system.
-
-The goal is to create a recognizable Forkeeps experience that can also encourage organic discovery of the app.
-
-Example concept:
+Forkeeps follows a client-server architecture with a dedicated backend API and frontend application.
 
 ```text
-┌──────────────────────────┐
-│       DATE RECEIPT       │
-│                          │
-│      RAMEN DATE 🍜       │
-│      AUG 24, 2026        │
-│                          │
-│  Food ............ ₱742  │
-│  Dessert ......... ₱150  │
-│  Good memories .... FREE │
-│                          │
-│  Rating .......... 9/10  │
-│                          │
-│  "We ordered way too much"│
-│                          │
-│      made with Forkeeps  │
-└──────────────────────────┘
+Frontend
+   |
+   | HTTP / REST API
+   v
+Backend
+   |
+   v
+Database
+```
+
+The backend is responsible for authentication, authorization, business logic, data validation, and persistence. The frontend consumes the API and provides the user interface.
+
+## Data Model
+
+The application distinguishes between **user-owned data** and **couple-owned data**.
+
+```text
+User
+ └── Couple Membership
+       └── Couple Space
+            ├── Tasks
+            ├── Plans
+            └── Shared Expenses
+```
+
+This structure allows Forkeeps to support collaboration while preserving clear ownership and access boundaries.
+
+## Development Status
+
+| Component      | Status      |
+| -------------- | ----------- |
+| Backend        | Completed   |
+| Database       | Completed   |
+| Authentication | Implemented |
+| API            | Implemented |
+| UI/UX Design   | In Progress |
+| Frontend       | In Progress |
+| Deployment     | Planned     |
+
+## Project Goals
+
+1. Build a practical collaborative application with a clear user experience.
+2. Implement secure account and authorization flows.
+3. Establish a scalable backend architecture.
+4. Maintain clear separation between personal and shared data.
+5. Deliver a responsive and intuitive frontend experience.
+
+## Future Improvements
+
+* Real-time synchronization
+* Push notifications and reminders
+* Calendar integration
+* Recurring tasks
+* Expense splitting and summaries
+* Activity history
+* Improved personalization
+* Production deployment and monitoring
+
+## Project Structure
+
+The repository is organized around the application's backend and frontend components, with supporting documentation and configuration maintained alongside the source code.
+
+## Development
+
+Forkeeps is currently under active development. The backend foundation is complete, while the frontend implementation is being developed from the finalized UI/UX designs.
+
+---
+
+**Forkeeps** — A shared space for planning life together.
