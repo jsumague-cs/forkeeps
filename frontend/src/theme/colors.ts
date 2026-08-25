@@ -1,0 +1,16 @@
+export const colors = {
+  background: "#FDFBF8",
+  text: "#1F2933",
+  mutedText: "#9CA3AF",
+  quietText: "#B0A8A0",
+  primary: "#E87A6D",
+  primaryDark: "#D46059",
+  blush: "#F3B6A8",
+  sage: "#A8BFA3",
+  sageLight: "#C5D4C1",
+  card: "#FFFFFF",
+  border: "#E8E2DC",
+  panelBorder: "#EAE4DE",
+  softCoral: "#FEF0EE",
+  softCoralBadge: "#FEF5F3",
+};
