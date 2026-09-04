@@ -130,4 +130,4 @@ Forkeeps is currently under active development. The backend foundation is comple
 
 ---
 
-**Forkeeps** — A shared space for planning life together.
+**Forkeeps** — Ideas to memories
